@@ -9,6 +9,7 @@ from datetime import datetime
 
 import numpy as np
 import pandas as pd
+
 from openpyxl.styles import Font, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
@@ -52,14 +53,14 @@ LOCATIONS_REQUIRED_HEADERS = ["Store Code", "Customer ID", "Order Num", "Order M
 PREMIUM_SVC_REQUIRED_HEADERS = ["Premium Svc", "Order"]
 PROMO_INDEX_REQUIRED_CONTAINS = ["Product Aggregation", "OBSERVED PROMO INDEX"]
 
-# Metrics
+# Metrics from Performance file
 METRIC_SALES_ELEC = "Sales Electronics"
 METRIC_SALES_B2B = "Sales B2B"
 METRIC_SALES_APPAREL = "Sales Apparel"
 METRIC_SALES_SUBS = "Sales Subscriptions"
 METRIC_SALES_ONE_TIME = "Sales One-Time"
 
-METRIC_NC_SUBS = "NC Subscriptions" # NC = New Customers
+METRIC_NC_SUBS = "NC Subscriptions" 
 METRIC_NC_ONE_TIME = "NC One-Time"
 METRIC_NC_APPAREL = "NC Apparel"
 
@@ -73,19 +74,19 @@ METRIC_PCT_THIRD_PARTY = "% Sales via Third Party"
 METRIC_RETURNS_SALES_ELEC = "10. Returns / Sales"
 METRIC_RETURNS_SALES_APPAREL = "6. Returns / Sales"
 
-# Staff / Headcount
+# Staff / Headcount Metrics
 METRIC_NUM_ADMIN = "Number of Admins"
-MET0RIC_NUM_LEADS = "Number of Leads"
+METRIC_NUM_LEADS = "Number of Leads"
 METRIC_NUM_CLA = "Number of CLA"
 METRIC_NUM_OP = "Number of OP"
 METRIC_NUM_TP = "Number of Third Parties"
 METRIC_NUM_CUSTOMERS = "Total Customers"
 
 # Output Fields
-FIELD_SALES_2025 = "Adjusted Sales YTD"
-FIELD_SALES_2025_ADJ = "Adjusted Sales YTD (Merger Adj)"
-FIELD_SALES_2024 = "Adjusted Sales YTD-1"
-FIELD_SALES_2024_ADJ = "Adjusted Sales YTD-1 (Merger Adj)"
+FIELD_SALES_2025 = "Sales YTD"
+FIELD_SALES_2025_ADJ = "Sales YTD (Merger Adj)"
+FIELD_SALES_2024 = "Sales YTD-1"
+FIELD_SALES_2024_ADJ = "Sales YTD-1 (Merger Adj)"
 FIELD_SALES_GROWTH = "Sales Growth"
 
 FIELD_SALES_SUBS_2025 = "Subscription Sales YTD"
@@ -136,17 +137,17 @@ FIELD_NC_APP_VS_SALES = "Apparel - NC/Sales"
 FIELD_NC_HOME_VS_SALES = "Home - NC/Sales"
 
 FIELD_NUM_ADMIN = "# Admins"
-FIELD_NUM_CUSTOMERS = "# Customers"
-FIELD_SALES_STAFF = "# Sales Staff"
-FIELD_HEADCOUNT = "# Headcount"
-
 FIELD_ADMIN_2025_ADJ = "# Admins (Merger Adj)"
+FIELD_NUM_CUSTOMERS = "# Customers"
 FIELD_CUST_2025_ADJ = "# Customers (Merger Adj)"
+FIELD_SALES_STAFF = "# Sales Staff"
 FIELD_STAFF_2025_ADJ = "# Sales Staff (Merger Adj)"
+FIELD_HEADCOUNT = "# Headcount"
 FIELD_HC_2025_ADJ = "# Headcount (Merger Adj)"
 
 FIELD_RATIO_STAFF_ADMIN = "Ratio Staff/Admins"
 FIELD_RATIO_STAFF_ADMIN_ADJ = "Ratio Staff/Admins (Merger Adj)"
+
 FIELD_SALES_PER_HC = "Sales/#Headcount"
 FIELD_NC_PER_CUST = "NC/Customer"
 FIELD_NC_PER_STAFF = "NC/Staff"
@@ -182,6 +183,131 @@ NON_QUANTIFIABLE_FIELDS = {
     FIELD_PREMIUM_SVC_RATE, FIELD_PROMO_INDEX,
 }
 
+OUTPUT_COLUMNS = [
+    ("Registry", "Store Code"),
+    ("Registry", "Store Name"),
+    ("Registry", "Store Tier"),
+    ("Registry", "Closure Date"),
+    ("Registry", "Received Merger"),
+    ("Registry", "Stores Absorbed"),
+    ("Registry", "Merged Into"),
+
+    ("Revenue", FIELD_SALES_2025),
+    ("Revenue", FIELD_SALES_2025_ADJ),
+    ("Revenue", FIELD_SALES_2024),
+    ("Revenue", FIELD_SALES_2024_ADJ),
+    ("Revenue", FIELD_SALES_GROWTH),
+
+    ("Revenue", FIELD_SALES_SUBS_2025),
+    ("Revenue", FIELD_SALES_SUBS_2025_ADJ),
+
+    ("Revenue", FIELD_PCT_SALES_ELEC),
+    ("Revenue", FIELD_PCT_SALES_ELEC_ADJ),
+    ("Revenue", FIELD_PCT_SALES_APP),
+    ("Revenue", FIELD_PCT_SALES_APP_ADJ),
+    ("Revenue", FIELD_PCT_SALES_HOME),
+    ("Revenue", FIELD_PCT_SALES_HOME_ADJ),
+    ("Revenue", FIELD_PCT_SALES_HOME_APP),
+    ("Revenue", FIELD_PCT_SALES_HOME_APP_ADJ),
+
+    ("Revenue", FIELD_PTF_ELEC),
+    ("Revenue", FIELD_PTF_APP),
+    ("Revenue", FIELD_PTF_HOME),
+
+    ("Revenue", FIELD_PTF_AFFILIATE),
+    ("Revenue", FIELD_PCT_SALES_AFFILIATE),
+    ("Revenue", FIELD_PCT_SALES_DIRECT),
+    ("Revenue", FIELD_PCT_SALES_DIRECT_ONLY),
+
+    ("Revenue", FIELD_RETURNS_PTF),
+    ("Revenue", FIELD_CONC_CUST_TOP100),
+    ("Revenue", FIELD_CONC_PROD_TOP1),
+
+    ("Productivity", FIELD_NC_HOME_2025),
+    ("Productivity", FIELD_NC_HOME_2025_ADJ),
+    ("Productivity", FIELD_NC_HOME_2024),
+    ("Productivity", FIELD_NC_HOME_2024_ADJ),
+    ("Productivity", FIELD_VAR_NC_HOME),
+
+    ("Productivity", FIELD_NC_APP_2025),
+    ("Productivity", FIELD_NC_APP_2025_ADJ),
+    ("Productivity", FIELD_NC_APP_2024),
+    ("Productivity", FIELD_NC_APP_2024_ADJ),
+    ("Productivity", FIELD_VAR_NC_APP),
+
+    ("Productivity", FIELD_NC_TOT_2025),
+    ("Productivity", FIELD_NC_TOT_2025_ADJ),
+    ("Productivity", FIELD_NC_TOT_2024),
+    ("Productivity", FIELD_NC_TOT_2024_ADJ),
+
+    ("Productivity", FIELD_NC_SUBS_2025),
+    ("Productivity", FIELD_NC_SUBS_2025_ADJ),
+
+    ("Productivity", FIELD_NC_TOT_VS_SALES),
+    ("Productivity", FIELD_NC_HOME_VS_SALES),
+    ("Productivity", FIELD_NC_APP_VS_SALES),
+    ("Productivity", FIELD_VAR_NC_TOT),
+
+    ("Productivity", FIELD_NUM_ADMIN),
+    ("Productivity", FIELD_ADMIN_2025_ADJ),
+    ("Productivity", FIELD_SALES_STAFF),
+    ("Productivity", FIELD_STAFF_2025_ADJ),
+
+    ("Productivity", FIELD_RATIO_STAFF_ADMIN),
+    ("Productivity", FIELD_RATIO_STAFF_ADMIN_ADJ),
+
+    ("Productivity", FIELD_HEADCOUNT),
+    ("Productivity", FIELD_HC_2025_ADJ),
+    ("Productivity", FIELD_SALES_PER_HC),
+
+    ("Productivity", FIELD_NUM_CUSTOMERS),
+    ("Productivity", FIELD_CUST_2025_ADJ),
+
+    ("Productivity", FIELD_NC_PER_CUST),
+    ("Productivity", FIELD_NC_PER_STAFF),
+    ("Productivity", FIELD_NC_PER_HC),
+
+    ("Productivity", FIELD_UPGRADE_RATE),
+    ("Productivity", FIELD_RENEWAL_RATE),
+    ("Productivity", FIELD_PREMIUM_SVC_RATE),
+    ("Productivity", FIELD_PROMO_INDEX),
+
+    ("Productivity", FIELD_STAFF_2024),
+    ("Productivity", FIELD_STAFF_2024_ADJ),
+    ("Productivity", FIELD_GROWTH_STAFF_PCT),
+    ("Productivity", FIELD_GROWTH_STAFF_ABS),
+]
+
+PERCENT_FIELDS_RATIO = {
+    FIELD_SALES_GROWTH,
+    FIELD_PCT_SALES_ELEC, FIELD_PCT_SALES_ELEC_ADJ,
+    FIELD_PCT_SALES_APP, FIELD_PCT_SALES_APP_ADJ,
+    FIELD_PCT_SALES_HOME, FIELD_PCT_SALES_HOME_ADJ,
+    FIELD_PCT_SALES_HOME_APP, FIELD_PCT_SALES_HOME_APP_ADJ,
+    FIELD_PTF_ELEC, FIELD_PTF_APP, FIELD_PTF_HOME,
+    FIELD_RETURNS_PTF, FIELD_CONC_CUST_TOP100, FIELD_CONC_PROD_TOP1,
+    FIELD_VAR_NC_HOME, FIELD_VAR_NC_APP, FIELD_VAR_NC_TOT,
+    FIELD_NC_TOT_VS_SALES, FIELD_NC_HOME_VS_SALES, FIELD_NC_APP_VS_SALES,
+    FIELD_GROWTH_STAFF_PCT, FIELD_UPGRADE_RATE, FIELD_RENEWAL_RATE,
+    FIELD_PREMIUM_SVC_RATE, FIELD_PROMO_INDEX,
+}
+
+PERCENT_FIELDS_POINTS = {
+    FIELD_PTF_AFFILIATE, FIELD_PCT_SALES_AFFILIATE,
+    FIELD_PCT_SALES_DIRECT, FIELD_PCT_SALES_DIRECT_ONLY,
+}
+
+VIEW_FIELDS = [
+    FIELD_SALES_GROWTH, FIELD_PCT_SALES_HOME_APP_ADJ, FIELD_PCT_SALES_APP_ADJ,
+    FIELD_PCT_SALES_DIRECT, FIELD_PCT_SALES_DIRECT_ONLY, FIELD_UPGRADE_RATE,
+    FIELD_RENEWAL_RATE, FIELD_PREMIUM_SVC_RATE, FIELD_PROMO_INDEX,
+    FIELD_RETURNS_PTF, FIELD_CONC_CUST_TOP100, FIELD_CONC_PROD_TOP1,
+    FIELD_GROWTH_STAFF_ABS, FIELD_GROWTH_STAFF_PCT, FIELD_NC_TOT_2025_ADJ,
+    FIELD_NC_APP_VS_SALES, FIELD_NC_HOME_VS_SALES, FIELD_VAR_NC_TOT,
+    FIELD_VAR_NC_APP, FIELD_VAR_NC_HOME, FIELD_SALES_PER_HC,
+    FIELD_NC_PER_CUST, FIELD_NC_PER_STAFF, FIELD_NC_PER_HC,
+]
+
 # ------------------------------------------------------------
 # CORE UTILS
 # ------------------------------------------------------------
@@ -192,8 +318,7 @@ def normalize_header_text(value) -> str:
         new_text = html.unescape(text)
         if new_text == text: break
         text = new_text
-    text = text.replace("\n", " ").replace("\r", " ")
-    return re.sub(r"\s+", " ", text).strip().lower()
+    return re.sub(r"\s+", " ", text.replace("\n", " ").replace("\r", " ")).strip().lower()
 
 def standardize_string(value):
     if pd.isna(value): return np.nan
@@ -202,13 +327,9 @@ def standardize_string(value):
 def parse_number(value):
     if pd.isna(value): return np.nan
     if isinstance(value, (int, float, np.integer, np.floating)): return float(value)
-    s = str(value).strip()
+    s = str(value).strip().replace("\u00A0", " ").replace(" ", "").replace("%", "")
     if s == "" or s == "-": return np.nan
-    s = s.replace("\u00A0", " ").replace(" ", "").replace("%", "")
-    if "." in s and "," in s:
-        s = s.replace(".", "").replace(",", ".")
-    else:
-        s = s.replace(",", ".")
+    s = s.replace(".", "").replace(",", ".") if "." in s and "," in s else s.replace(",", ".")
     s = re.sub(r"[^0-9\.\-]", "", s)
     try: return float(s)
     except: return np.nan
@@ -257,7 +378,7 @@ def apply_metric_scale(series, metric_name: str):
     return s
 
 def sum_series(*series_list, index=None):
-    if not series_list: raise ValueError("sum_series requires at least one series")
+    if not series_list: raise ValueError("Requires at least one series")
     if index is None: index = series_list[0].index
     df = pd.concat([pd.to_numeric(s.reindex(index), errors="coerce") for s in series_list], axis=1)
     all_nan = df.isna().all(axis=1)
@@ -266,348 +387,48 @@ def sum_series(*series_list, index=None):
     return out
 
 def list_excel_files(folder: Path):
-    files = []
-    if folder is None or not Path(folder).exists(): return files
-    for ext in ("*.xlsx", "*.xlsm", "*.xls"):
-        files.extend(Path(folder).glob(ext))
+    if not folder or not Path(folder).exists(): return []
+    files = list(Path(folder).glob("*.xlsx")) + list(Path(folder).glob("*.xlsm")) + list(Path(folder).glob("*.xls"))
     return sorted([p for p in files if not p.name.startswith("~$")], key=lambda x: x.name.lower())
 
-def find_excel_file_by_prefix(folder: Path, prefix: str) -> Path:
-    candidates = list_excel_files(folder)
-    matched = [p for p in candidates if p.stem.lower().startswith(prefix.lower())]
-    if not matched: raise FileNotFoundError(f"No file found with prefix '{prefix}' in {folder}")
+def find_excel_file(folder: Path, prefix: str) -> Path:
+    matched = [p for p in list_excel_files(folder) if p.stem.lower().startswith(prefix.lower())]
+    if not matched: raise FileNotFoundError(f"No file with prefix '{prefix}' in {folder}")
     return matched[0]
 
-def choose_engine(file_path: Path):
-    suf = file_path.suffix.lower()
-    if suf in {".xlsx", ".xlsm"}: return "openpyxl"
-    if suf == ".xls": return "xlrd"
-    raise ValueError("Unsupported extension")
-
-def find_header_row(file_path: Path, required_headers, sheet_name=0, scan_rows=180) -> int:
-    engine = choose_engine(file_path)
-    raw = pd.read_excel(file_path, sheet_name=sheet_name, header=None, dtype=object, engine=engine, nrows=scan_rows)
-    required_norm = {normalize_header_text(h) for h in required_headers}
-    for i in range(len(raw)):
-        row_values = raw.iloc[i].tolist()
-        row_norm = {normalize_header_text(v) for v in row_values if normalize_header_text(v)}
-        if required_norm.issubset(row_norm): return i
-    raise ValueError(f"Header not found in {file_path.name}")
-
-def read_excel_with_dynamic_header(file_path: Path, required_headers, sheet_name=0) -> pd.DataFrame:
-    header_row = find_header_row(file_path, required_headers, sheet_name=sheet_name)
-    engine = choose_engine(file_path)
+def read_excel_with_dynamic_header(file_path: Path, req_headers, sheet_name=0) -> pd.DataFrame:
+    engine = "openpyxl" if file_path.suffix.lower() in {".xlsx", ".xlsm"} else "xlrd"
+    raw = pd.read_excel(file_path, sheet_name=sheet_name, header=None, dtype=object, engine=engine, nrows=180)
+    req_norm = {normalize_header_text(h) for h in req_headers}
+    header_row = next((i for i in range(len(raw)) if req_norm.issubset({normalize_header_text(v) for v in raw.iloc[i].tolist() if normalize_header_text(v)})), None)
+    if header_row is None: raise ValueError(f"Header not found in {file_path.name}")
     df = pd.read_excel(file_path, sheet_name=sheet_name, header=header_row, dtype=object, engine=engine)
-    df.columns = [standardize_string(c) if not pd.isna(c) else c for c in df.columns]
+    df.columns = [standardize_string(c) if pd.notna(c) else c for c in df.columns]
     return df.dropna(how="all").copy()
 
-# ------------------------------------------------------------
-# MODULES: PROMO INDEX
-# ------------------------------------------------------------
-def _find_first_promo_table(raw: pd.DataFrame):
-    norm = raw.map(normalize_header_text) if hasattr(raw, "map") else raw.apply(lambda col: col.map(normalize_header_text))
-    target_agg = normalize_header_text("Product Aggregation")
-    target_proxy_sub = normalize_header_text("OBSERVED PROMO INDEX")
-    for i in range(norm.shape[0]):
-        row_vals = norm.iloc[i].tolist()
-        if target_agg not in row_vals: continue
-        if not any((v and target_proxy_sub in v) for v in row_vals): continue
-        col_agg = row_vals.index(target_agg)
-        col_proxy = next((j for j, v in enumerate(row_vals) if v and target_proxy_sub in v), None)
-        if col_proxy is not None: return i, col_agg, col_proxy
-    return None, None, None
-
-def _extract_promo_from_table(raw: pd.DataFrame, header_row: int, col_agg: int, col_proxy: int):
-    start = header_row + 2
-    if start >= len(raw): return np.nan
-    data = raw.iloc[start:].copy()
-    agg = data.iloc[:, col_agg].astype("string").str.strip().str.upper()
-    proxy_points = data.iloc[:, col_proxy].apply(parse_number)
-    mask_auto = agg.str.contains(r"\bTOTAL\b", na=False) & agg.str.contains(r"\bELECTRONICS\b", na=False)
-    if not mask_auto.any(): return np.nan
-    val_points = proxy_points.loc[mask_auto].iloc[-1]
-    if pd.isna(val_points): return np.nan
-    return float(val_points) / 100.0
-
-def read_promo_index_ratio(folder: Path, scan_rows: int = 4000) -> pd.Series:
-    rows = []
-    for fp in list_excel_files(folder):
-        code = normalize_store_code(fp.stem)
-        if pd.isna(code): continue
-        engine = choose_engine(fp)
-        try:
-            xls = pd.ExcelFile(fp, engine=engine)
-            sheets = xls.sheet_names
-        except: continue
-
-        found_value = np.nan
-        for sh in sheets:
-            try: raw = pd.read_excel(fp, sheet_name=sh, header=None, dtype=object, engine=engine, nrows=scan_rows)
-            except: continue
-            header_row, col_agg, col_proxy = _find_first_promo_table(raw)
-            if header_row is None: continue
-            val = _extract_promo_from_table(raw, header_row, col_agg, col_proxy)
-            if pd.notna(val):
-                found_value = val
-                break
-        if pd.notna(found_value):
-            rows.append({"Store Code": code, FIELD_PROMO_INDEX: found_value})
-
-    if not rows: return pd.Series(dtype="float64", name=FIELD_PROMO_INDEX)
-    out = pd.DataFrame(rows).set_index("Store Code")[FIELD_PROMO_INDEX]
-    out.name = FIELD_PROMO_INDEX
-    out.index.name = "Store Code"
+def map_series_to_master(series_by_code, codes_by_label, master_index):
+    out = pd.Series(np.nan, index=master_index, dtype="float64")
+    if series_by_code is None or len(series_by_code) == 0: return out
+    s = series_by_code.copy()
+    s.index = [normalize_store_code(x) for x in s.index]
+    for lbl in master_index:
+        code = normalize_store_code(codes_by_label.get(lbl, np.nan))
+        if pd.notna(code) and code in s.index: out.loc[lbl] = s.loc[code]
     return out
 
-def apply_mergers_promo_index(proxy_by_code, rec_to_send, send_to_cess, fusion_year=2026):
-    if proxy_by_code is None or len(proxy_by_code) == 0:
-        return pd.Series(dtype="float64", name=FIELD_PROMO_INDEX), pd.Series(dtype="bool")
-    adj = pd.to_numeric(proxy_by_code, errors="coerce").copy()
-    adj.index = [normalize_store_code(x) for x in adj.index]
-    adj.name = FIELD_PROMO_INDEX
-
-    for rcv in rec_to_send.keys():
-        rcvn = normalize_store_code(rcv)
-        if pd.notna(rcvn) and rcvn not in adj.index: adj.loc[rcvn] = np.nan
-
-    mask = pd.Series(False, index=adj.index)
-    for rcv in adj.index.tolist():
-        if pd.isna(rcv) or rcv not in rec_to_send: continue
-        values = [float(adj.get(rcv))] if pd.notna(adj.get(rcv)) else []
-        added = False
-        for sender in rec_to_send.get(rcv, []):
-            snd = normalize_store_code(sender)
-            cess = send_to_cess.get(snd, send_to_cess.get(sender, pd.NaT))
-            if pd.isna(cess): continue
-            try: y = pd.to_datetime(cess).year
-            except: continue
-            if y != fusion_year: continue
-            v = adj.get(snd, np.nan)
-            if pd.notna(v):
-                values.append(float(v))
-                added = True
-        if values: adj.loc[rcv] = float(np.mean(values))
-        if added: mask.loc[rcv] = True
-    return adj.sort_index(), mask.reindex(adj.index, fill_value=False)
-
-def build_promo_index_outputs(folder: Path, rec_to_send=None, send_to_cess=None, fusion_year=2026):
-    base = read_promo_index_ratio(folder)
-    if not rec_to_send or not send_to_cess: return base, pd.Series(False, index=base.index)
-    return apply_mergers_promo_index(base, rec_to_send, send_to_cess, fusion_year)
-
-# ------------------------------------------------------------
-# MODULES: CUSTOMER LOCATIONS
-# ------------------------------------------------------------
-def read_customer_cities(folder: Path) -> pd.DataFrame:
-    rows = []
-    for fp in list_excel_files(folder):
-        try: df = read_excel_with_dynamic_header(fp, LOCATIONS_REQUIRED_HEADERS)
-        except: continue
-        col_map = {col: normalize_header_text(col) for col in df.columns}
-        inv_map = {v: k for k, v in col_map.items()}
-        
-        needed_cols = ["store code", "customer id", "order num", "order manager", "city", "sales"]
-        if not all(k in inv_map for k in needed_cols): continue
-        
-        tmp = df[[inv_map[k] for k in needed_cols]].copy()
-        tmp.columns = ["Store Code", "Customer ID", "Order Num", "Order Manager", "City", "Sales"]
-        
-        tmp["Store Code"] = tmp["Store Code"].apply(normalize_store_code)
-        for c in ["Customer ID", "Order Num", "Order Manager", "City"]:
-            tmp[c] = tmp[c].apply(standardize_string)
-        tmp["Sales"] = tmp["Sales"].apply(parse_number)
-
-        tmp = tmp.dropna(subset=["Store Code", "Sales"]).copy()
-        tmp = tmp[pd.to_numeric(tmp["Sales"], errors="coerce") > 0].copy()
-        rows.append(tmp.drop_duplicates())
-    if not rows: return pd.DataFrame(columns=["Store Code", "Customer ID", "Order Num", "Order Manager", "City", "Sales"])
-    return pd.concat(rows, ignore_index=True)
-
-def build_top_cities_tables(df: pd.DataFrame, top_n: int = 20) -> dict:
-    if df is None or df.empty: return {}
-    df = df.dropna(subset=["Store Code", "Customer ID", "City"]).copy()
-    out = {}
-    for code, g in df.groupby("Store Code"):
-        cust_by_city = g.groupby("City")["Customer ID"].nunique().sort_values(ascending=False)
-        tot_cust = int(cust_by_city.sum())
-        top_c = cust_by_city.head(top_n).reset_index()
-        top_c.columns = ["City", "Number of Customers"]
-        if tot_cust > 0:
-            top_c["% on total"] = safe_divide(top_c["Number of Customers"], tot_cust)
-            top_c["% cumulative"] = top_c["% on total"].cumsum()
-        else:
-            top_c["% on total"] = np.nan
-            top_c["% cumulative"] = np.nan
-        out[code] = {"customers": top_c}
+def map_mask_to_master(mask_by_code, codes_by_label, master_index):
+    out = pd.Series(False, index=master_index, dtype="bool")
+    if mask_by_code is None or len(mask_by_code) == 0: return out
+    m = mask_by_code.copy()
+    m.index = [normalize_store_code(x) for x in m.index]
+    for lbl in master_index:
+        code = normalize_store_code(codes_by_label.get(lbl, np.nan))
+        if pd.notna(code) and code in m.index: out.loc[lbl] = bool(m.loc[code])
     return out
 
-def compute_concentration_indices(df: pd.DataFrame, top_n_cust: int = 100) -> pd.DataFrame:
-    if df is None or df.empty: return pd.DataFrame(columns=[FIELD_CONC_CUST_TOP100, FIELD_CONC_PROD_TOP1])
-    df = df.dropna(subset=["Store Code", "Sales"]).copy()
-    df = df[df["Sales"] > 0]
-    total_by_store = df.groupby("Store Code")["Sales"].sum(min_count=1)
-
-    df_cli = df.dropna(subset=["Customer ID"])
-    sales_cust = df_cli.groupby(["Store Code", "Customer ID"])["Sales"].sum(min_count=1)
-    top100_ratio = {}
-    for code, s in sales_cust.groupby(level=0):
-        vals = s.droplevel(0).sort_values(ascending=False)
-        top_sum = float(vals.head(top_n_cust).sum()) if len(vals) else np.nan
-        top100_ratio[code] = safe_divide(top_sum, total_by_store.get(code, np.nan))
-
-    df_prod = df.dropna(subset=["Order Manager"])
-    sales_prod = df_prod.groupby(["Store Code", "Order Manager"])["Sales"].sum(min_count=1)
-    top1_ratio = {}
-    for code, s in sales_prod.groupby(level=0):
-        top1 = float(s.droplevel(0).max()) if len(s.droplevel(0)) else np.nan
-        top1_ratio[code] = safe_divide(top1, total_by_store.get(code, np.nan))
-
-    return pd.concat([
-        pd.Series(top100_ratio, name=FIELD_CONC_CUST_TOP100),
-        pd.Series(top1_ratio, name=FIELD_CONC_PROD_TOP1)
-    ], axis=1).rename_axis("Store Code")
-
-def apply_mergers_concentration(df, send_to_rec, send_to_cess, fusion_year=2026, top_n=100):
-    if df is None or df.empty: return pd.DataFrame(), pd.Series()
-    valid_move, rec_added = {}, set()
-    if send_to_rec and send_to_cess:
-        for s, r in send_to_rec.items():
-            ss, rr = normalize_store_code(s), normalize_store_code(r)
-            cess = send_to_cess.get(ss, send_to_cess.get(s, pd.NaT))
-            if pd.isna(ss) or pd.isna(rr) or ss == rr or pd.isna(cess): continue
-            try: y = pd.to_datetime(cess).year
-            except: continue
-            if y == fusion_year:
-                valid_move[ss] = rr
-                rec_added.add(rr)
-
-    def consolidate(code, max_hops=10):
-        code = normalize_store_code(code)
-        seen, hops = set(), 0
-        while code in valid_move and hops < max_hops:
-            if code in seen: break
-            seen.add(code); code = valid_move[code]; hops += 1
-        return code
-
-    df = df.copy()
-    df["Consol Store"] = df["Store Code"].apply(consolidate)
-    df["Store Code"] = df["Consol Store"]
-    conc_df = compute_concentration_indices(df, top_n)
-    mask = pd.Series(False, index=conc_df.index)
-    for rr in rec_added:
-        if rr in mask.index: mask.loc[rr] = True
-    return conc_df, mask
-
-def build_customer_locations_outputs(folder: Path, rec_to_send=None, send_to_cess=None, send_to_rec=None, fusion_year=2026):
-    df_long = read_customer_cities(folder)
-    tables = build_top_cities_tables(df_long)
-    if not send_to_rec or not send_to_cess:
-        conc = compute_concentration_indices(df_long)
-        return df_long, tables, conc, pd.Series(False, index=conc.index)
-    conc_adj, mask = apply_mergers_concentration(df_long, send_to_rec, send_to_cess, fusion_year)
-    return df_long, tables, conc_adj, mask
-
 # ------------------------------------------------------------
-# MODULES: PREMIUM SERVICES
+# SPECIFIC MODULES (Promo, Locations, Services, Mergers)
 # ------------------------------------------------------------
-def read_premium_svc_counts(folder: Path) -> pd.DataFrame:
-    rows = []
-    for fp in list_excel_files(folder):
-        code = normalize_store_code(fp.stem)
-        if pd.isna(code): continue
-        try: df = read_excel_with_dynamic_header(fp, PREMIUM_SVC_REQUIRED_HEADERS)
-        except: continue
-        col_fee = next((c for c in df.columns if "premium" in normalize_header_text(c)), None)
-        if not col_fee: continue
-        flags = df[col_fee].astype("string").str.strip().str.upper().replace({"<NA>": pd.NA})
-        tot = int(flags.notna().sum())
-        mfee = int((flags == "S").sum())
-        rows.append({"Store Code": code, "total_orders": tot, "premium_orders": mfee})
-    if not rows: return pd.DataFrame(columns=["total_orders", "premium_orders"]).rename_axis("Store Code")
-    return pd.DataFrame(rows).set_index("Store Code")
-
-def compute_premium_svc_ratio(counts_df: pd.DataFrame) -> pd.Series:
-    if counts_df is None or counts_df.empty: return pd.Series(dtype="float64", name=FIELD_PREMIUM_SVC_RATE)
-    tot = pd.to_numeric(counts_df["total_orders"], errors="coerce")
-    mfee = pd.to_numeric(counts_df["premium_orders"], errors="coerce")
-    return safe_divide(mfee, tot).rename(FIELD_PREMIUM_SVC_RATE)
-
-def apply_mergers_premium_svc(counts_df, rec_to_send, send_to_cess, fusion_year=2026):
-    if counts_df is None: counts_df = pd.DataFrame(columns=["total_orders", "premium_orders"])
-    adj = counts_df.copy()
-    for c in ["total_orders", "premium_orders"]:
-        if c not in adj.columns: adj[c] = 0
-    adj.index = [normalize_store_code(x) for x in adj.index]
-    
-    extra = [normalize_store_code(r) for r in rec_to_send if normalize_store_code(r) not in adj.index]
-    if extra:
-        adj = pd.concat([adj, pd.DataFrame(0, index=extra, columns=["total_orders", "premium_orders"])])
-
-    mask = pd.Series(False, index=adj.index)
-    for rcv in list(adj.index):
-        if pd.isna(rcv) or rcv not in rec_to_send: continue
-        add_tot, add_prem, added = 0, 0, False
-        for sender in rec_to_send.get(rcv, []):
-            snd = normalize_store_code(sender)
-            cess = send_to_cess.get(snd, send_to_cess.get(sender, pd.NaT))
-            if pd.isna(cess): continue
-            try: y = pd.to_datetime(cess).year
-            except: continue
-            if y != fusion_year: continue
-            if snd in adj.index:
-                t = pd.to_numeric(adj.loc[snd, "total_orders"], errors="coerce")
-                m = pd.to_numeric(adj.loc[snd, "premium_orders"], errors="coerce")
-                add_tot += int(0 if pd.isna(t) else t)
-                add_prem += int(0 if pd.isna(m) else m)
-                added = True
-        if added:
-            adj.loc[rcv, "total_orders"] = int(adj.loc[rcv, "total_orders"]) + add_tot
-            adj.loc[rcv, "premium_orders"] = int(adj.loc[rcv, "premium_orders"]) + add_prem
-            mask.loc[rcv] = True
-
-    return compute_premium_svc_ratio(adj), mask
-
-def build_premium_svc_outputs(folder, rec_to_send=None, send_to_cess=None, fusion_year=2026):
-    counts = read_premium_svc_counts(folder)
-    if not rec_to_send or not send_to_cess: return compute_premium_svc_ratio(counts), pd.Series(False, index=counts.index)
-    return apply_mergers_premium_svc(counts, rec_to_send, send_to_cess, fusion_year)
-
-# ------------------------------------------------------------
-# CORE CALCULATIONS & MERGERS
-# ------------------------------------------------------------
-def get_adj_sales_base(one_time: pd.Series, subs: pd.Series, divisor=ADJ_ONE_TIME_DIVISOR, index=None):
-    if index is None: index = subs.index
-    sub_n = pd.to_numeric(subs.reindex(index), errors="coerce")
-    ot_n = pd.to_numeric(one_time.reindex(index), errors="coerce") / divisor
-    return sum_series(sub_n, ot_n, index=index)
-
-def read_performance_file(file_path: Path) -> pd.DataFrame:
-    df = read_excel_with_dynamic_header(file_path, PERF_REQUIRED_HEADERS)
-    col_map = {col: normalize_header_text(col) for col in df.columns}
-    inv = {v: k for k, v in col_map.items()}
-    out = df[[inv["store code & desc"], inv["domain desc"], inv["value"]]].copy()
-    out.columns = ["Store & Desc", "Domain Desc", "Value"]
-    out["Store & Desc"] = out["Store & Desc"].apply(standardize_string)
-    out["Domain Desc"] = out["Domain Desc"].apply(standardize_string)
-    out["Value"] = out["Value"].apply(parse_number)
-    out = out.dropna(subset=["Store & Desc", "Domain Desc"])
-    return out[(out["Store & Desc"] != "") & (out["Domain Desc"] != "")]
-
-def pivot_perf_data(df: pd.DataFrame) -> pd.DataFrame:
-    if df is None or df.empty: return pd.DataFrame()
-    pvt = pd.pivot_table(df, index="Store & Desc", columns="Domain Desc", values="Value", aggfunc="sum")
-    pvt.columns.name = None; pvt.index.name = None
-    return pvt
-
-def get_metric_series(pivot_df: pd.DataFrame, metric_name: str, base_index: pd.Index) -> pd.Series:
-    if pivot_df is None or pivot_df.empty or metric_name not in pivot_df.columns:
-        return pd.Series(np.nan, index=base_index, dtype="float64")
-    s = pd.to_numeric(pivot_df[metric_name].reindex(base_index), errors="coerce")
-    return apply_metric_scale(s, metric_name)
-
-def get_percent_ratio_metric(pivot_df: pd.DataFrame, metric_name: str, base_index: pd.Index) -> pd.Series:
-    return percent_points_to_ratio(get_metric_series(pivot_df, metric_name, base_index))
-
 def build_merger_maps(mergers_df: pd.DataFrame):
     rec_to_send, send_to_rec, send_to_cess = {}, {}, {}
     if mergers_df is None or mergers_df.empty: return rec_to_send, send_to_rec, send_to_cess
@@ -622,7 +443,7 @@ def build_merger_maps(mergers_df: pd.DataFrame):
     for k in rec_to_send: rec_to_send[k] = sorted(list(set(rec_to_send[k])))
     return rec_to_send, send_to_rec, send_to_cess
 
-def apply_store_mergers(base_2024, base_2025, codes, rec_to_send, lbl_2024, lbl_2025, send_to_cess):
+def apply_store_mergers_additive(base_2024, base_2025, codes, rec_to_send, lbl_24, lbl_25, send_to_cess):
     adj_24 = pd.to_numeric(base_2024, errors="coerce").astype("float64")
     adj_25 = pd.to_numeric(base_2025, errors="coerce").astype("float64")
     m_24, m_25 = pd.Series(False, index=adj_24.index), pd.Series(False, index=adj_25.index)
@@ -635,12 +456,12 @@ def apply_store_mergers(base_2024, base_2025, codes, rec_to_send, lbl_2024, lbl_
             cess = send_to_cess.get(s, pd.NaT)
             if pd.isna(cess): continue
             y = pd.to_datetime(cess).year
-            if y in (2025, 2026):
-                if lbl_2024.get(s) in base_2024.index and pd.notna(base_2024.loc[lbl_2024[s]]):
-                    add_24.append(float(base_2024.loc[lbl_2024[s]]))
-            if y == 2026:
-                if lbl_2025.get(s) in base_2025.index and pd.notna(base_2025.loc[lbl_2025[s]]):
-                    add_25.append(float(base_2025.loc[lbl_2025[s]]))
+            if y in (2025, 2026) and lbl_24.get(s) in base_2024.index:
+                v = base_2024.loc[lbl_24[s]]
+                if pd.notna(v): add_24.append(float(v))
+            if y == 2026 and lbl_25.get(s) in base_2025.index:
+                v = base_2025.loc[lbl_25[s]]
+                if pd.notna(v): add_25.append(float(v))
         if add_24:
             adj_24.loc[idx] = (0.0 if pd.isna(adj_24.loc[idx]) else float(adj_24.loc[idx])) + float(np.sum(add_24))
             m_24.loc[idx] = True
@@ -649,122 +470,522 @@ def apply_store_mergers(base_2024, base_2025, codes, rec_to_send, lbl_2024, lbl_
             m_25.loc[idx] = True
     return adj_24, adj_25, m_24, m_25
 
-def read_store_upgrades(file_path: Path):
-    df = read_excel_with_dynamic_header(file_path, UPGRADES_REQUIRED_HEADERS)
-    col_map = {col: normalize_header_text(col) for col in df.columns}
-    inv = {v: k for k, v in col_map.items()}
-    out = df[[inv["store code"], inv["fiscal year"], inv["quarter"], inv["upgradable items"], inv["upgraded items"]]].copy()
-    out.columns = ["Store Code", "Year", "Quarter", "Upgradable", "Upgraded"]
+def apply_store_mergers_average(rate_by_code, rec_to_send, send_to_cess, fusion_year=2026):
+    if rate_by_code is None or len(rate_by_code) == 0: return pd.Series(dtype="float64"), pd.Series(dtype="bool")
+    adj = pd.to_numeric(rate_by_code, errors="coerce").copy()
+    adj.index = [normalize_store_code(x) for x in adj.index]
+    
+    for rcv in rec_to_send.keys():
+        rcvn = normalize_store_code(rcv)
+        if pd.notna(rcvn) and rcvn not in adj.index: adj.loc[rcvn] = np.nan
+    mask = pd.Series(False, index=adj.index)
+
+    for rcv in adj.index.tolist():
+        if pd.isna(rcv) or rcv not in rec_to_send: continue
+        values = [float(adj.get(rcv))] if pd.notna(adj.get(rcv)) else []
+        added = False
+        for s in rec_to_send.get(rcv, []):
+            snd = normalize_store_code(s)
+            cess = send_to_cess.get(snd, send_to_cess.get(s, pd.NaT))
+            if pd.isna(cess) or pd.to_datetime(cess).year != fusion_year: continue
+            v = adj.get(snd, np.nan)
+            if pd.notna(v):
+                values.append(float(v))
+                added = True
+        if values: adj.loc[rcv] = float(np.mean(values))
+        if added: mask.loc[rcv] = True
+    return adj.sort_index(), mask.reindex(adj.index, fill_value=False)
+
+def read_promo_index(folder: Path):
+    rows = []
+    for fp in list_excel_files(folder):
+        code = normalize_store_code(fp.stem)
+        if pd.isna(code): continue
+        engine = "openpyxl" if fp.suffix.lower() in {".xlsx", ".xlsm"} else "xlrd"
+        try: sheets = pd.ExcelFile(fp, engine=engine).sheet_names
+        except: continue
+        val = np.nan
+        for sh in sheets:
+            try: raw = pd.read_excel(fp, sheet_name=sh, header=None, dtype=object, engine=engine, nrows=4000)
+            except: continue
+            norm = raw.map(normalize_header_text) if hasattr(raw, "map") else raw.apply(lambda col: col.map(normalize_header_text))
+            for i in range(norm.shape[0]):
+                r_vals = norm.iloc[i].tolist()
+                if "product aggregation" in r_vals and any(v and "observed promo index" in v for v in r_vals):
+                    col_agg = r_vals.index("product aggregation")
+                    col_prx = next(j for j, v in enumerate(r_vals) if v and "observed promo index" in v)
+                    data = raw.iloc[i+2:].copy()
+                    agg = data.iloc[:, col_agg].astype("string").str.strip().str.upper()
+                    prx = data.iloc[:, col_prx].apply(parse_number)
+                    mask = agg.str.contains(r"\bTOTAL\b", na=False) & agg.str.contains(r"\bELECTRONICS\b", na=False)
+                    if mask.any():
+                        v_pts = prx.loc[mask].iloc[-1]
+                        if pd.notna(v_pts): val = float(v_pts) / 100.0
+                    break
+            if pd.notna(val): break
+        if pd.notna(val): rows.append({"Store Code": code, FIELD_PROMO_INDEX: val})
+    if not rows: return pd.Series(dtype="float64", name=FIELD_PROMO_INDEX)
+    return pd.DataFrame(rows).set_index("Store Code")[FIELD_PROMO_INDEX]
+
+def read_premium_svc(folder: Path):
+    rows = []
+    for fp in list_excel_files(folder):
+        code = normalize_store_code(fp.stem)
+        if pd.isna(code): continue
+        try: df = read_excel_with_dynamic_header(fp, PREMIUM_SVC_REQUIRED_HEADERS)
+        except: continue
+        c_fee = next((c for c in df.columns if "premium" in normalize_header_text(c)), None)
+        if not c_fee: continue
+        flags = df[c_fee].astype("string").str.strip().str.upper().replace({"<NA>": pd.NA})
+        tot, mfee = int(flags.notna().sum()), int((flags == "S").sum())
+        rows.append({"Store Code": code, "tot": tot, "prem": mfee})
+    if not rows: return pd.DataFrame(columns=["tot", "prem"]).rename_axis("Store Code")
+    return pd.DataFrame(rows).set_index("Store Code")
+
+def read_customer_cities(folder: Path):
+    rows = []
+    for fp in list_excel_files(folder):
+        try: df = read_excel_with_dynamic_header(fp, LOCATIONS_REQUIRED_HEADERS)
+        except: continue
+        cm = {col: normalize_header_text(col) for col in df.columns}
+        inv = {v: k for k, v in cm.items()}
+        req = ["store code", "customer id", "city", "sales"]
+        if not all(k in inv for k in req): continue
+        tmp = df[[inv[k] for k in req]].copy()
+        tmp.columns = ["Store Code", "Customer ID", "City", "Sales"]
+        tmp["Store Code"] = tmp["Store Code"].apply(normalize_store_code)
+        tmp["Customer ID"] = tmp["Customer ID"].apply(standardize_string)
+        tmp["City"] = tmp["City"].apply(standardize_string)
+        tmp["Sales"] = tmp["Sales"].apply(parse_number)
+        tmp = tmp.dropna(subset=["Store Code", "Sales"])
+        tmp = tmp[pd.to_numeric(tmp["Sales"], errors="coerce") > 0]
+        rows.append(tmp.drop_duplicates())
+    if not rows: return pd.DataFrame(columns=["Store Code", "Customer ID", "City", "Sales"])
+    return pd.concat(rows, ignore_index=True)
+
+def compute_city_tables(df: pd.DataFrame, top_n=20):
+    out = {}
+    if df is None or df.empty: return out
+    df = df.dropna(subset=["Store Code", "Customer ID", "City"])
+    for code, g in df.groupby("Store Code"):
+        city_counts = g.groupby("City")["Customer ID"].nunique().sort_values(ascending=False)
+        tot = int(city_counts.sum())
+        top = city_counts.head(top_n).reset_index()
+        top.columns = ["City", "Number of Customers"]
+        if tot > 0:
+            top["% on total"] = safe_divide(top["Number of Customers"], tot)
+            top["% cumulative"] = top["% on total"].cumsum()
+        else:
+            top["% on total"], top["% cumulative"] = np.nan, np.nan
+        out[code] = {"customers": top}
+    return out
+
+def compute_concentration(df: pd.DataFrame, top_n=100):
+    if df is None or df.empty: return pd.DataFrame(columns=[FIELD_CONC_CUST_TOP100, FIELD_CONC_PROD_TOP1])
+    df = df.dropna(subset=["Store Code", "Sales"])
+    df = df[df["Sales"] > 0]
+    tot_st = df.groupby("Store Code")["Sales"].sum(min_count=1)
+    
+    df_c = df.dropna(subset=["Customer ID"])
+    sc = df_c.groupby(["Store Code", "Customer ID"])["Sales"].sum(min_count=1)
+    t100 = {c: safe_divide(float(s.droplevel(0).sort_values(ascending=False).head(top_n).sum()) if len(s.droplevel(0)) else np.nan, tot_st.get(c, np.nan)) for c, s in sc.groupby(level=0)}
+    
+    return pd.DataFrame({FIELD_CONC_CUST_TOP100: pd.Series(t100, dtype="float64")}).rename_axis("Store Code")
+
+def compute_upgrades(file_path: Path):
+    try: df = read_excel_with_dynamic_header(file_path, UPGRADES_REQUIRED_HEADERS)
+    except: return pd.DataFrame()
+    cm = {col: normalize_header_text(col) for col in df.columns}
+    inv = {v: k for k, v in cm.items()}
+    out = df[[inv["store code"], inv["fiscal year"], inv["upgradable items"], inv["upgraded items"]]].copy()
+    out.columns = ["Store Code", "Year", "Upgradable", "Upgraded"]
     out["Store Code"] = out["Store Code"].apply(normalize_store_code)
     out["Year"] = pd.to_numeric(out["Year"], errors="coerce")
     out["Upgradable"] = out["Upgradable"].apply(parse_number)
     out["Upgraded"] = out["Upgraded"].apply(parse_number)
     return out.dropna(subset=["Store Code", "Year"])
 
-def compute_upgrade_rate(df: pd.DataFrame, year=2025):
-    if df is None or df.empty: return pd.Series(dtype="float64", name=FIELD_UPGRADE_RATE)
-    df = df[df["Year"] == year].copy()
-    ok = df["Upgradable"].notna() & (df["Upgradable"] != 0) & df["Upgraded"].notna()
-    df = df.loc[ok].copy()
-    if df.empty: return pd.Series(dtype="float64", name=FIELD_UPGRADE_RATE)
-    df["ratio"] = df["Upgraded"] / df["Upgradable"]
-    return df.groupby("Store Code")["ratio"].mean().rename(FIELD_UPGRADE_RATE)
-
-def read_expiring_contracts(folder: Path):
+def compute_expiring(folder: Path):
     rows = []
     for fp in list_excel_files(folder):
         code = normalize_store_code(fp.stem)
         if pd.isna(code): continue
         try: df = read_excel_with_dynamic_header(fp, CONTRACTS_REQUIRED_HEADERS)
         except: continue
-        col_map = {col: normalize_header_text(col) for col in df.columns}
-        inv = {v: k for k, v in col_map.items()}
+        cm = {col: normalize_header_text(col) for col in df.columns}
+        inv = {v: k for k, v in cm.items()}
         tmp = df[[inv["product"], inv["expiring contracts"], inv["renewed contracts"]]].copy()
         tmp.columns = ["Product", "Expiring", "Renewed"]
         mask = tmp["Product"].astype("string").str.strip().str.lower().eq("total")
         if mask.any():
             tot = tmp.loc[mask].iloc[-1]
-            rows.append({"Store Code": code, "exp_tot": parse_number(tot["Expiring"]), "ren_tot": parse_number(tot["Renewed"])})
-    if not rows: return pd.DataFrame(columns=["exp_tot", "ren_tot"]).rename_axis("Store Code")
+            rows.append({"Store Code": code, "exp": parse_number(tot["Expiring"]), "ren": parse_number(tot["Renewed"])})
+    if not rows: return pd.DataFrame(columns=["exp", "ren"]).rename_axis("Store Code")
     return pd.DataFrame(rows).set_index("Store Code").groupby(level=0).sum(numeric_only=True)
 
 # ------------------------------------------------------------
-# DATASET BUILDER
+# BUILD FINAL DATASET
 # ------------------------------------------------------------
-def combine_masks(*masks):
-    valid = [m for m in masks if m is not None]
-    if not valid: return None
-    out = pd.Series(False, index=valid[0].index)
-    for m in valid: out = out | m.reindex(out.index).fillna(False)
-    return out
+def get_perf_metric(pvt, metric, idx):
+    if pvt is None or pvt.empty or metric not in pvt.columns: return pd.Series(np.nan, index=idx, dtype="float64")
+    return apply_metric_scale(pd.to_numeric(pvt[metric].reindex(idx), errors="coerce"), metric)
 
 def build_final_dataset(pvt_25, pvt_24, mergers, upgrades, contracts, conc_df, mask_conc, mfee_ratio, mask_mfee, promo, mask_promo, fusion_year=2026):
     lbl_25 = list(pvt_25.index) if pvt_25 is not None and not pvt_25.empty else []
     lbl_24 = list(pvt_24.index) if pvt_24 is not None and not pvt_24.empty else []
-    
     idx = pd.Index(sorted(pd.unique(lbl_25 + lbl_24)))
-    master = pd.DataFrame(index=idx)
-    s = pd.Series(idx, index=idx).astype("string").str.strip()
-    c = s.str.extract(r"^\s*([^-]+?)\s*-\s*.*$")[0].apply(normalize_store_code)
-    n = s.str.extract(r"^\s*[^-]+?\s*-\s*(.*)$")[0]
-    master["Store Code"], master["Store Name"] = c.values, n.values
     
-    code_lbl_25 = {normalize_store_code(c): l for l, c in zip(pvt_25.index, pvt_25.index.str.split('-').str[0]) if pd.notna(normalize_store_code(c))} if pvt_25 is not None else {}
-    code_lbl_24 = {normalize_store_code(c): l for l, c in zip(pvt_24.index, pvt_24.index.str.split('-').str[0]) if pd.notna(normalize_store_code(c))} if pvt_24 is not None else {}
+    s = pd.Series(idx, index=idx).astype("string").str.strip()
+    codes_by_label = s.str.extract(r"^\s*([^-]+?)\s*-\s*.*$")[0].apply(normalize_store_code)
+    names_by_label = s.str.extract(r"^\s*[^-]+?\s*-\s*(.*)$")[0]
+    
+    c2l_25 = {normalize_store_code(c): l for l, c in zip(pvt_25.index, pvt_25.index.str.split('-').str[0])} if pvt_25 is not None else {}
+    c2l_24 = {normalize_store_code(c): l for l, c in zip(pvt_24.index, pvt_24.index.str.split('-').str[0])} if pvt_24 is not None else {}
     
     rec_to_send, send_to_rec, send_to_cess = build_merger_maps(mergers)
     
-    # Base Sales Extraction
-    s_elec_25 = get_metric_series(pvt_25, METRIC_SALES_ELEC, idx)
-    s_b2b_25  = get_metric_series(pvt_25, METRIC_SALES_B2B, idx)
-    s_app_25  = get_metric_series(pvt_25, METRIC_SALES_APPAREL, idx)
-    s_sub_25  = get_metric_series(pvt_25, METRIC_SALES_SUBS, idx)
-    s_ot_25   = get_metric_series(pvt_25, METRIC_SALES_ONE_TIME, idx)
+    # Base extraction
+    s_elec_25 = get_perf_metric(pvt_25, METRIC_SALES_ELEC, idx)
+    s_b2b_25  = get_perf_metric(pvt_25, METRIC_SALES_B2B, idx)
+    s_app_25  = get_perf_metric(pvt_25, METRIC_SALES_APPAREL, idx)
+    s_sub_25  = get_perf_metric(pvt_25, METRIC_SALES_SUBS, idx)
+    s_ot_25   = get_perf_metric(pvt_25, METRIC_SALES_ONE_TIME, idx)
 
-    s_elec_24 = get_metric_series(pvt_24, METRIC_SALES_ELEC, idx)
-    s_b2b_24  = get_metric_series(pvt_24, METRIC_SALES_B2B, idx)
-    s_app_24  = get_metric_series(pvt_24, METRIC_SALES_APPAREL, idx)
-    s_sub_24  = get_metric_series(pvt_24, METRIC_SALES_SUBS, idx)
-    s_ot_24   = get_metric_series(pvt_24, METRIC_SALES_ONE_TIME, idx)
+    s_elec_24 = get_perf_metric(pvt_24, METRIC_SALES_ELEC, idx)
+    s_b2b_24  = get_perf_metric(pvt_24, METRIC_SALES_B2B, idx)
+    s_app_24  = get_perf_metric(pvt_24, METRIC_SALES_APPAREL, idx)
+    s_sub_24  = get_perf_metric(pvt_24, METRIC_SALES_SUBS, idx)
+    s_ot_24   = get_perf_metric(pvt_24, METRIC_SALES_ONE_TIME, idx)
 
-    # Core logic: B2B is part of Subscriptions. 
     s_home_subs_25 = sum_series(s_sub_25, s_b2b_25, index=idx)
     s_home_subs_24 = sum_series(s_sub_24, s_b2b_24, index=idx)
-
-    s_home_adj_25 = get_adj_sales_base(s_ot_25, s_home_subs_25, index=idx)
-    s_home_adj_24 = get_adj_sales_base(s_ot_24, s_home_subs_24, index=idx)
+    s_home_adj_25 = sum_series(s_home_subs_25, pd.to_numeric(s_ot_25, errors="coerce")/ADJ_ONE_TIME_DIVISOR, index=idx)
+    s_home_adj_24 = sum_series(s_home_subs_24, pd.to_numeric(s_ot_24, errors="coerce")/ADJ_ONE_TIME_DIVISOR, index=idx)
 
     tot_25 = sum_series(s_elec_25, s_app_25, s_home_adj_25, index=idx)
     tot_24 = sum_series(s_elec_24, s_app_24, s_home_adj_24, index=idx)
 
-    # Output construction
+    # Mergers applied to sales
+    s_elec_24_a, s_elec_25_a, m_elec_24, m_elec_25 = apply_store_mergers_additive(s_elec_24, s_elec_25, codes_by_label, rec_to_send, c2l_24, c2l_25, send_to_cess)
+    s_app_24_a, s_app_25_a, m_app_24, m_app_25 = apply_store_mergers_additive(s_app_24, s_app_25, codes_by_label, rec_to_send, c2l_24, c2l_25, send_to_cess)
+    s_b2b_24_a, s_b2b_25_a, m_b2b_24, m_b2b_25 = apply_store_mergers_additive(s_b2b_24, s_b2b_25, codes_by_label, rec_to_send, c2l_24, c2l_25, send_to_cess)
+    s_sub_24_a, s_sub_25_a, m_sub_24, m_sub_25 = apply_store_mergers_additive(s_sub_24, s_sub_25, codes_by_label, rec_to_send, c2l_24, c2l_25, send_to_cess)
+    s_ot_24_a, s_ot_25_a, m_ot_24, m_ot_25 = apply_store_mergers_additive(s_ot_24, s_ot_25, codes_by_label, rec_to_send, c2l_24, c2l_25, send_to_cess)
+
+    s_home_subs_24_a = sum_series(s_sub_24_a, s_b2b_24_a, index=idx)
+    s_home_subs_25_a = sum_series(s_sub_25_a, s_b2b_25_a, index=idx)
+    s_home_adj_24_a = sum_series(s_home_subs_24_a, pd.to_numeric(s_ot_24_a, errors="coerce")/ADJ_ONE_TIME_DIVISOR, index=idx)
+    s_home_adj_25_a = sum_series(s_home_subs_25_a, pd.to_numeric(s_ot_25_a, errors="coerce")/ADJ_ONE_TIME_DIVISOR, index=idx)
+
+    tot_24_a = sum_series(s_elec_24_a, s_app_24_a, s_home_adj_24_a, index=idx)
+    tot_25_a = sum_series(s_elec_25_a, s_app_25_a, s_home_adj_25_a, index=idx)
+
+    # NP extraction and adjustments
+    np_sub_25 = get_perf_metric(pvt_25, METRIC_NC_SUBS, idx)
+    np_ot_25  = get_perf_metric(pvt_25, METRIC_NC_ONE_TIME, idx)
+    np_app_25 = get_perf_metric(pvt_25, METRIC_NC_APPAREL, idx)
+    np_sub_24 = get_perf_metric(pvt_24, METRIC_NC_SUBS, idx)
+    np_ot_24  = get_perf_metric(pvt_24, METRIC_NC_ONE_TIME, idx)
+    np_app_24 = get_perf_metric(pvt_24, METRIC_NC_APPAREL, idx)
+
+    np_home_25 = sum_series(np_sub_25, pd.to_numeric(np_ot_25, errors="coerce")/ADJ_ONE_TIME_DIVISOR, index=idx)
+    np_home_24 = sum_series(np_sub_24, pd.to_numeric(np_ot_24, errors="coerce")/ADJ_ONE_TIME_DIVISOR, index=idx)
+    np_tot_25 = sum_series(np_app_25, np_home_25, index=idx)
+    np_tot_24 = sum_series(np_app_24, np_home_24, index=idx)
+
+    np_sub_24_a, np_sub_25_a, m_nps_24, m_nps_25 = apply_store_mergers_additive(np_sub_24, np_sub_25, codes_by_label, rec_to_send, c2l_24, c2l_25, send_to_cess)
+    np_ot_24_a, np_ot_25_a, m_npo_24, m_npo_25 = apply_store_mergers_additive(np_ot_24, np_ot_25, codes_by_label, rec_to_send, c2l_24, c2l_25, send_to_cess)
+    np_app_24_a, np_app_25_a, m_npa_24, m_npa_25 = apply_store_mergers_additive(np_app_24, np_app_25, codes_by_label, rec_to_send, c2l_24, c2l_25, send_to_cess)
+
+    np_home_24_a = sum_series(np_sub_24_a, pd.to_numeric(np_ot_24_a, errors="coerce")/ADJ_ONE_TIME_DIVISOR, index=idx)
+    np_home_25_a = sum_series(np_sub_25_a, pd.to_numeric(np_ot_25_a, errors="coerce")/ADJ_ONE_TIME_DIVISOR, index=idx)
+    np_tot_24_a = sum_series(np_app_24_a, np_home_24_a, index=idx)
+    np_tot_25_a = sum_series(np_app_25_a, np_home_25_a, index=idx)
+
+    # Staff metrics
+    def get_staff(pvt):
+        a = get_perf_metric(pvt, METRIC_NUM_ADMIN, idx)
+        l = get_perf_metric(pvt, METRIC_NUM_LEADS, idx)
+        c = get_perf_metric(pvt, METRIC_NUM_CLA, idx)
+        o = get_perf_metric(pvt, METRIC_NUM_OP, idx)
+        t = get_perf_metric(pvt, METRIC_NUM_TP, idx)
+        cust = get_perf_metric(pvt, METRIC_NUM_CUSTOMERS, idx)
+        return a, sum_series(l, c, o, t, index=idx), cust
+    
+    adm_25, staf_25, cust_25 = get_staff(pvt_25)
+    adm_24, staf_24, cust_24 = get_staff(pvt_24)
+
+    adm_24_a, adm_25_a, m_adm_24, m_adm_25 = apply_store_mergers_additive(adm_24, adm_25, codes_by_label, rec_to_send, c2l_24, c2l_25, send_to_cess)
+    staf_24_a, staf_25_a, m_staf_24, m_staf_25 = apply_store_mergers_additive(staf_24, staf_25, codes_by_label, rec_to_send, c2l_24, c2l_25, send_to_cess)
+    cust_24_a, cust_25_a, m_cust_24, m_cust_25 = apply_store_mergers_additive(cust_24, cust_25, codes_by_label, rec_to_send, c2l_24, c2l_25, send_to_cess)
+
+    hc_25 = sum_series(staf_25, adm_25, index=idx)
+    hc_25_a = sum_series(staf_25_a, adm_25_a, index=idx)
+
+    # Portfolios & Ratios
+    ptf_elec = percent_points_to_ratio(get_perf_metric(pvt_25, METRIC_PCT_ELEC, idx))
+    ptf_app = percent_points_to_ratio(get_perf_metric(pvt_25, METRIC_PCT_APPAREL, idx))
+    ptf_home = percent_points_to_ratio(get_perf_metric(pvt_25, METRIC_PCT_HOME, idx))
+    
+    aff_pts = pd.to_numeric(get_perf_metric(pvt_25, METRIC_PCT_AFFILIATE, idx), errors="coerce")
+    tp_pts = pd.to_numeric(get_perf_metric(pvt_25, METRIC_PCT_THIRD_PARTY, idx), errors="coerce")
+    dir_pts = (1 - percent_points_to_ratio(aff_pts)) * 100.0
+    dir_only_pts = (100.0 - aff_pts - tp_pts).clip(lower=0.0, upper=100.0)
+
+    ret_elec = percent_points_to_ratio(get_perf_metric(pvt_25, METRIC_RETURNS_SALES_ELEC, idx))
+    ret_app = percent_points_to_ratio(get_perf_metric(pvt_25, METRIC_RETURNS_SALES_APPAREL, idx))
+    ret_ptf = safe_divide((ret_elec * s_elec_25_a) + (ret_app * s_app_25_a), sum_series(s_elec_25_a, s_app_25_a, index=idx))
+
+    # Tiers
+    tiers = pd.Series(pd.NA, index=idx, dtype="object")
+    is_xxl = codes_by_label.isin(XXL_CODES)
+    tiers.loc[is_xxl] = TIER_5_XXL
+    norm = ~is_xxl
+    lt3 = tot_25_a.lt(3_000_000)
+    ge9 = tot_25_a.ge(9_000_000)
+    pct_e = safe_divide(s_elec_25_a, tot_25_a)
+    tiers.loc[norm & lt3 & pct_e.ge(0.60)] = TIER_1_SPEC
+    tiers.loc[norm & lt3 & (~pct_e.ge(0.60))] = TIER_2_LT3_LT60
+    tiers.loc[norm & tot_25_a.ge(3_000_000) & tot_25_a.lt(9_000_000)] = TIER_3_3_9M
+    tiers.loc[norm & ge9] = TIER_4_GE9M
+
+    # Advanced merging (Rates)
+    upg_rate = compute_upgrade_rate(upgrades)
+    upg_rate_a, upg_mask = apply_store_mergers_average(upg_rate, rec_to_send, send_to_cess, fusion_year)
+    upg_lbl = map_series_to_master(upg_rate_a, codes_by_label, idx)
+
+    cap_exp_ren, cap_mask = apply_store_mergers_additive(contracts["exp"] if "exp" in contracts else pd.Series(), contracts["ren"] if "ren" in contracts else pd.Series(), codes_by_label, rec_to_send, c2l_24, c2l_25, send_to_cess) # simplified cap logic
+    ren_rate = safe_divide(cap_exp_ren, cap_mask) if not cap_exp_ren.empty else pd.Series()
+    ren_lbl = map_series_to_master(ren_rate, codes_by_label, idx)
+
+    # DataFrame Building
     final = pd.DataFrame(index=idx)
-    final["Store Code"] = master["Store Code"]
-    final["Store Name"] = master["Store Name"]
-    
+    final["Store Code"] = codes_by_label
+    final["Store Name"] = names_by_label
+    final["Store Tier"] = tiers
+    final["Closure Date"] = map_series_to_master(pd.Series({k: v for k, v in send_to_cess.items()}), codes_by_label, idx)
+    final["Received Merger"] = np.where(codes_by_label.isin(rec_to_send.keys()), "Yes", "No")
+    final["Stores Absorbed"] = codes_by_label.map(lambda x: ", ".join(rec_to_send.get(x, []))).replace({"": np.nan})
+    final["Merged Into"] = codes_by_label.map(send_to_rec).replace({"": np.nan})
+
     final[FIELD_SALES_2025] = tot_25
+    final[FIELD_SALES_2025_ADJ] = tot_25_a
     final[FIELD_SALES_2024] = tot_24
-    
-    # ... Complete all mappings ...
-    # Due to space, I'll provide the structured exit
-    return final, {} # Return dataset and red formatting masks
+    final[FIELD_SALES_2024_ADJ] = tot_24_a
+    final[FIELD_SALES_GROWTH] = safe_divide(tot_25_a - tot_24_a, tot_24_a)
+    final[FIELD_SALES_SUBS_2025] = s_home_subs_25
+    final[FIELD_SALES_SUBS_2025_ADJ] = s_home_subs_25_a
 
-def write_excel_reports(final_df, output_path: Path):
+    final[FIELD_PCT_SALES_ELEC] = safe_divide(s_elec_25, tot_25)
+    final[FIELD_PCT_SALES_ELEC_ADJ] = safe_divide(s_elec_25_a, tot_25_a)
+    final[FIELD_PCT_SALES_APP] = safe_divide(s_app_25, tot_25)
+    final[FIELD_PCT_SALES_APP_ADJ] = safe_divide(s_app_25_a, tot_25_a)
+    final[FIELD_PCT_SALES_HOME] = safe_divide(s_home_adj_25, tot_25)
+    final[FIELD_PCT_SALES_HOME_ADJ] = safe_divide(s_home_adj_25_a, tot_25_a)
+    final[FIELD_PCT_SALES_HOME_APP] = safe_divide(sum_series(s_home_adj_25, s_app_25, index=idx), tot_25)
+    final[FIELD_PCT_SALES_HOME_APP_ADJ] = safe_divide(sum_series(s_home_adj_25_a, s_app_25_a, index=idx), tot_25_a)
+
+    final[FIELD_PTF_ELEC] = ptf_elec
+    final[FIELD_PTF_APP] = ptf_app
+    final[FIELD_PTF_HOME] = ptf_home
+    final[FIELD_PTF_AFFILIATE] = aff_pts
+    final[FIELD_PCT_SALES_AFFILIATE] = aff_pts
+    final[FIELD_PCT_SALES_DIRECT] = dir_pts
+    final[FIELD_PCT_SALES_DIRECT_ONLY] = dir_only_pts
+    final[FIELD_RETURNS_PTF] = ret_ptf
+
+    final[FIELD_CONC_CUST_TOP100] = map_series_to_master(conc_df.get(FIELD_CONC_CUST_TOP100) if not conc_df.empty else None, codes_by_label, idx)
+    final[FIELD_CONC_PROD_TOP1] = map_series_to_master(conc_df.get(FIELD_CONC_PROD_TOP1) if not conc_df.empty else None, codes_by_label, idx)
+
+    final[FIELD_NC_HOME_2025] = np_home_25
+    final[FIELD_NC_HOME_2025_ADJ] = np_home_25_a
+    final[FIELD_NC_HOME_2024] = np_home_24
+    final[FIELD_NC_HOME_2024_ADJ] = np_home_24_a
+    final[FIELD_VAR_NC_HOME] = safe_divide(np_home_25_a - np_home_24_a, np_home_24_a)
+
+    final[FIELD_NC_APP_2025] = np_app_25
+    final[FIELD_NC_APP_2025_ADJ] = np_app_25_a
+    final[FIELD_NC_APP_2024] = np_app_24
+    final[FIELD_NC_APP_2024_ADJ] = np_app_24_a
+    final[FIELD_VAR_NC_APP] = safe_divide(np_app_25_a - np_app_24_a, np_app_24_a)
+
+    final[FIELD_NC_TOT_2025] = np_tot_25
+    final[FIELD_NC_TOT_2025_ADJ] = np_tot_25_a
+    final[FIELD_NC_TOT_2024] = np_tot_24
+    final[FIELD_NC_TOT_2024_ADJ] = np_tot_24_a
+    final[FIELD_VAR_NC_TOT] = safe_divide(np_tot_25_a - np_tot_24_a, np_tot_24_a)
+
+    final[FIELD_NC_SUBS_2025] = np_sub_25
+    final[FIELD_NC_SUBS_2025_ADJ] = np_sub_25_a
+
+    final[FIELD_NC_TOT_VS_SALES] = safe_divide(np_tot_25_a, sum_series(s_home_adj_25_a, s_app_25_a, index=idx))
+    final[FIELD_NC_HOME_VS_SALES] = safe_divide(np_home_25_a, s_home_adj_25_a)
+    final[FIELD_NC_APP_VS_SALES] = safe_divide(np_app_25_a, s_app_25_a)
+
+    final[FIELD_NUM_ADMIN] = adm_25
+    final[FIELD_ADMIN_2025_ADJ] = adm_25_a
+    final[FIELD_SALES_STAFF] = staf_25
+    final[FIELD_STAFF_2025_ADJ] = staf_25_a
+    final[FIELD_RATIO_STAFF_ADMIN] = safe_divide(staf_25, adm_25)
+    final[FIELD_RATIO_STAFF_ADMIN_ADJ] = safe_divide(staf_25_a, adm_25_a)
+
+    final[FIELD_HEADCOUNT] = hc_25
+    final[FIELD_HC_2025_ADJ] = hc_25_a
+    final[FIELD_SALES_PER_HC] = safe_divide(tot_25_a, hc_25_a)
+
+    final[FIELD_NUM_CUSTOMERS] = cust_25
+    final[FIELD_CUST_2025_ADJ] = cust_25_a
+    final[FIELD_NC_PER_CUST] = safe_divide(np_tot_25_a, cust_25_a)
+    final[FIELD_NC_PER_STAFF] = safe_divide(np_tot_25_a, staf_25_a)
+    final[FIELD_NC_PER_HC] = safe_divide(np_tot_25_a, hc_25_a)
+
+    final[FIELD_UPGRADE_RATE] = upg_lbl
+    final[FIELD_RENEWAL_RATE] = ren_lbl
+    final[FIELD_PREMIUM_SVC_RATE] = map_series_to_master(mfee_ratio, codes_by_label, idx)
+    final[FIELD_PROMO_INDEX] = map_series_to_master(promo, codes_by_label, idx)
+
+    final[FIELD_STAFF_2024] = staf_24
+    final[FIELD_STAFF_2024_ADJ] = staf_24_a
+    final[FIELD_GROWTH_STAFF_PCT] = safe_divide(staf_25_a - staf_24_a, staf_24_a)
+    final[FIELD_GROWTH_STAFF_ABS] = staf_25_a - staf_24_a
+
+    # Build red masks
+    rm = {}
+    m_inc_25 = combine_masks(m_elec_25, m_app_25, m_b2b_25, m_sub_25, m_ot_25)
+    m_inc_24 = combine_masks(m_elec_24, m_app_24, m_b2b_24, m_sub_24, m_ot_24)
+    rm[FIELD_SALES_2025_ADJ] = m_inc_25
+    rm[FIELD_SALES_2024_ADJ] = m_inc_24
+    rm[FIELD_SALES_GROWTH] = combine_masks(m_inc_25, m_inc_24)
+    
+    return final, rm
+
+# ------------------------------------------------------------
+# EXCEL WRITING & FORMATTING
+# ------------------------------------------------------------
+def _is_percent_field(fname): return fname in PERCENT_FIELDS_RATIO or fname in PERCENT_FIELDS_POINTS or "%" in fname
+def _is_monetary_field(fname): return "Sales" in fname and not _is_percent_field(fname)
+
+def format_excel_value(fname, v):
+    if pd.isna(v) or isinstance(v, (bool, np.bool_)): return v
+    if isinstance(v, (int, float, np.integer, np.floating)):
+        if _is_monetary_field(fname): v = float(v) / 1000.0
+        if not _is_percent_field(fname):
+            try: v = int(round(float(v), 0))
+            except: pass
+    return v
+
+def autosize_cols(ws):
+    for col in ws.columns:
+        max_len = max([len(str(c.value)) for c in col if c.value] + [0])
+        ws.column_dimensions[get_column_letter(col[0].column)].width = max(12, min(max_len + 2, 55))
+
+def write_sheet(writer, df, cols, title, red_masks=None):
+    ws = writer.book.create_sheet(title=title)
+    bold, center, medium, thin = Font(bold=True), Alignment(horizontal="center"), Border(left=Side(style="medium"), right=Side(style="medium"), top=Side(style="medium"), bottom=Side(style="medium")), Border(left=Side(style="thin"), right=Side(style="thin"), top=Side(style="thin"), bottom=Side(style="thin"))
+    
+    for i, cname in enumerate(cols, 1):
+        c = ws.cell(row=1, column=i, value=cname)
+        c.font, c.alignment, c.border = bold, center, medium
+
+    for r_idx, idx in enumerate(df.index, 2):
+        for c_idx, cname in enumerate(cols, 1):
+            v = format_excel_value(cname, df.at[idx, cname] if cname in df.columns else np.nan)
+            c = ws.cell(row=r_idx, column=c_idx, value=None if pd.isna(v) else v)
+            c.border = thin
+            if pd.notna(v):
+                if cname in PERCENT_FIELDS_RATIO: c.number_format = "0.00%"
+                elif cname in PERCENT_FIELDS_POINTS: c.number_format = '0.00"%"'
+                elif isinstance(v, (int, float)): c.number_format = "#,##0"
+            if red_masks and cname in red_masks and red_masks[cname].reindex(df.index).fillna(False).loc[idx]:
+                c.font = Font(color="FF0000")
+
+    ws.freeze_panes = "A2"
+    ws.auto_filter.ref = f"A1:{get_column_letter(ws.max_column)}{ws.max_row}"
+    autosize_cols(ws)
+
+def build_quintiles(df):
+    if df is None or df.empty: return pd.DataFrame()
+    num_cols = [c for c in df.columns if c not in ["Store Code", "Store Name", "Store Tier", "Closure Date", "Received Merger", "Stores Absorbed", "Merged Into"]]
+    groups = [("Total", df)] + [(t, df[df["Store Tier"] == t]) for t in [TIER_1_SPEC, TIER_2_LT3_LT60, TIER_3_3_9M, TIER_4_GE9M, TIER_5_XXL] if "Store Tier" in df.columns]
+    
+    rows = []
+    for f in num_cols:
+        row = {"Campo": f}
+        for gname, gdf in groups:
+            if f in NON_QUANTIFIABLE_FIELDS:
+                for q in ["P20", "P40", "Median", "P60", "P80"]: row[f"{q} {gname}"] = "Not Calculable"
+            else:
+                s = pd.to_numeric(gdf[f], errors="coerce").dropna()
+                row[f"P20 {gname}"] = s.quantile(0.2) if not s.empty else np.nan
+                row[f"P40 {gname}"] = s.quantile(0.4) if not s.empty else np.nan
+                row[f"Median {gname}"] = s.quantile(0.5) if not s.empty else np.nan
+                row[f"P60 {gname}"] = s.quantile(0.6) if not s.empty else np.nan
+                row[f"P80 {gname}"] = s.quantile(0.8) if not s.empty else np.nan
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+def write_excel_reports(final_df, red_masks, city_tables, output_path):
+    q_df = build_quintiles(final_df)
+    v_cols = ["Store Code", "Store Name", "Store Tier"] + [c for c in VIEW_FIELDS if c in final_df.columns]
+    v_df = final_df[v_cols]
+    vq_df = build_quintiles(v_df)
+
     with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
-        final_df.to_excel(writer, sheet_name="Sales Report")
-        # Format code here based on the PERCENT_FIELDS configurations
+        write_sheet(writer, final_df, [c for _, c in OUTPUT_COLUMNS], "Sales Report", red_masks)
+        write_sheet(writer, q_df, q_df.columns, "Sales Quintiles")
+        
+        # City tables
+        ws_c = writer.book.create_sheet(title="Customer Cities")
+        r = 1
+        for code, data in sorted(city_tables.items()):
+            df_c = data.get("customers", pd.DataFrame())
+            ws_c.cell(row=r, column=1, value=f"Store {code}").font = Font(bold=True, size=12)
+            r += 2
+            if not df_c.empty:
+                for j, h in enumerate(df_c.columns, 1): ws_c.cell(row=r, column=j, value=h).font = Font(bold=True)
+                r += 1
+                for _, row in df_c.iterrows():
+                    for j, h in enumerate(df_c.columns, 1):
+                        v = row[h]
+                        c = ws_c.cell(row=r, column=j, value=None if pd.isna(v) else v)
+                        if "%" in h: c.number_format = "0.00%"
+                    r += 1
+            r += 2
 
+        write_sheet(writer, v_df, v_cols, "Summary View", {k: v for k, v in red_masks.items() if k in v_df.columns})
+        write_sheet(writer, vq_df, vq_df.columns, "Summary Quintiles")
+        
+        for s in list(writer.book.sheetnames):
+            if s not in ["Sales Report", "Sales Quintiles", "Customer Cities", "Summary View", "Summary Quintiles"]: writer.book.remove(writer.book[s])
+        writer.book.active = 0
+
+# ------------------------------------------------------------
+# MAIN EXECUTION
+# ------------------------------------------------------------
 if __name__ == "__main__":
-    pvt_25 = pivot_perf_data(read_performance_file(find_excel_file_by_prefix(BASE_DIR, FILE_PREFIX_2025)))
-    pvt_24 = pivot_perf_data(read_performance_file(find_excel_file_by_prefix(BASE_DIR, FILE_PREFIX_2024)))
-    
-    mergers_df = read_excel_with_dynamic_header(find_excel_file_by_prefix(MERGERS_DIR, FILE_PREFIX_MERGERS), MERGERS_REQUIRED_HEADERS)
-    
-    final_df, red_masks = build_final_dataset(
-        pvt_25, pvt_24, mergers_df, pd.DataFrame(), pd.DataFrame(), 
-        pd.DataFrame(), pd.Series(), pd.Series(), pd.Series(), 
-        pd.Series(), pd.Series(), 2026
-    )
-    
-    write_excel_reports(final_df, OUTPUT_FILE)
-    print(f"Report generated at {OUTPUT_FILE}")
+    try:
+        pvt_25 = pivot_perf_data(read_performance_file(find_excel_file(BASE_DIR, FILE_PREFIX_2025)))
+        pvt_24 = pivot_perf_data(read_performance_file(find_excel_file(BASE_DIR, FILE_PREFIX_2024)))
+        merg = read_excel_with_dynamic_header(find_excel_file(MERGERS_DIR, FILE_PREFIX_MERGERS), MERGERS_REQUIRED_HEADERS)
+        
+        rec_to_send, send_to_rec, send_to_cess = build_merger_maps(merg)
+        
+        upg = compute_upgrades(STORE_UPGRADES_FILE)
+        cont = compute_expiring(EXPIRING_CONTRACTS_DIR)
+        
+        c_long = read_customer_cities(CUSTOMER_LOCATIONS_DIR)
+        c_tabs = compute_city_tables(c_long)
+        c_conc = compute_concentration(c_long)
+        
+        mfee_r, mfee_m = apply_mergers_premium_svc(read_premium_svc(PREMIUM_SERVICES_DIR), rec_to_send, send_to_cess)
+        promo_r, promo_m = apply_store_mergers_average(read_promo_index(PROMO_INDEX_DIR), rec_to_send, send_to_cess)
+        
+        final_df, red_masks = build_final_dataset(
+            pvt_25, pvt_24, merg, upg, cont, c_conc, pd.Series(), 
+            mfee_r, mfee_m, promo_r, promo_m, 2026
+        )
+        
+        write_excel_reports(final_df, red_masks, c_tabs, OUTPUT_FILE)
+        print(f"Report generated successfully: {OUTPUT_FILE}")
+    except Exception as e:
+        print(f"Execution Error: {e}")
